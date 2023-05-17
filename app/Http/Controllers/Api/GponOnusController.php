@@ -82,13 +82,18 @@ class GponOnusController extends Controller
         //     'name' =>  $name,
         //     'hour' => 3
         // ]);
+        // ['m', 'h', 'd', 'y'], [' minutes', ' hours', ' days', ' years']
 
-        $valueTime = Str::replace(['m', 'h', 'd', 'y'], [' minutes', ' hours', ' days', ' years'], $timer);
-        var_dump($valueTime);
-        die();
+        $valueTime = "";
+        if (Str::contains('d', $timer)) {
+            return 'aqui';
+        }
+        $valueTime = Str::replace('d', 'days', $timer);
+        return !!Str::contains('d', $timer);
+
         $actualDate = time(); // Obtém o timestamp da data atual
-        $days = date('Y-m-d H:i:s', strtotime("-$valueTime", $actualDate));
+        $pastTime = date('Y-m-d H:i:s', strtotime("-$valueTime", $actualDate));
 
-        return $this->success($days);
+        return $this->success($valueTime);
     }
 }

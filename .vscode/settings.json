@@ -1,0 +1,30 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+    },
+    "blade.format.enable": true,
+    "[blade]": {
+        "editor.autoClosingBrackets": "always",
+        "editor.defaultFormatter": "onecentlin.laravel-blade"
+    },
+    "bladeFormatter.format.enabled": true,
+    "[blade]": {
+        "editor.defaultFormatter": "shufo.vscode-blade-formatter"
+    },
+    "editor.fontSize": 15,
+    "laravelDocs.version": "10.x",
+    "LaravelExtraIntellisense.modelsPaths": ["app", "app/Models"],
+    "laravel_goto_view.extensions": [
+        ".blade.php",
+        ".inky.php"
+    ],
+    "[php]": {
+        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    },
+    "files.associations": {
+        "*.env.development": "env",
+        "*.env.production": "env"
+    }
+}
