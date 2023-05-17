@@ -33,7 +33,9 @@
         },
         "files": [
             "app/helpers/Macros.php",
-            "app/helpers/RequestsClient.php"
+            "app/helpers/RequestsClient.php",
+            "app/helpers/MkBytes.php",
+            "app/helpers/Currency.php"
         ]
     },
     "autoload-dev": {

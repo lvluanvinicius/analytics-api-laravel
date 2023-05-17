@@ -80,19 +80,17 @@ class PercentilController extends Controller
         $auxItem = array_slice($auxItem, $num_elements_remove); // Removendo elementos.
 
         // Somando os valores.
-        $sumValues = number_format(array_sum(array_map('intval', $auxItem)), 2, '.', '');
+        $sumValues = array_sum(array_map('intval', $auxItem));
 
         // Somando convertendo em bytes.
-        // $value_mb = $sumValues / (8 * 1000000);
-        $value_mb = number_format(($sumValues / (8 * 1000000)),  2, '.', '');
+        $value_mb = $sumValues / (8 * 1000000);
 
         // Cálculo de gastos.
-        $real = number_format(($value_mb * 2.00), 2, ',', '.');
-        // $real = $value_mb * 2.00;
+        $real = number_format($value_mb * 2.00, 2, ',', '.');
 
         return [
             "consumption" => $sumValues,
-            "value" => $value_mb,
+            "value" => formatSpeed($value_mb),
             "real" => $real,
         ];
     }
