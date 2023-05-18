@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GponOnus;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 class GponOnusController extends Controller
@@ -69,7 +70,6 @@ class GponOnusController extends Controller
         $timer = $params['timer'];
 
         // Validar parametros.
-        // ...
 
         // Validar tempo encaminhado.
 
@@ -82,18 +82,14 @@ class GponOnusController extends Controller
         //     'name' =>  $name,
         //     'hour' => 3
         // ]);
-        // ['m', 'h', 'd', 'y'], [' minutes', ' hours', ' days', ' years']
 
-        $valueTime = "";
-        if (Str::contains('d', $timer)) {
-            return 'aqui';
-        }
-        $valueTime = Str::replace('d', 'days', $timer);
-        return !!Str::contains('d', $timer);
 
-        $actualDate = time(); // Obtém o timestamp da data atual
+        // Substituindo valores de letas para palavras completas, utilizadas no strtotime.
+        $valueTime = Str::replace(['d', 'm', 'h', 'y'], ['days', 'minutes', 'hours', 'years'], $timer);
+
+        $actualDate = date('Y-m-d H:i:s'); // Obtém o timestamp da data atual
         $pastTime = date('Y-m-d H:i:s', strtotime("-$valueTime", $actualDate));
 
-        return $this->success($valueTime);
+        return $this->success($pastTime);
     }
 }

@@ -49,9 +49,11 @@ class InterconnectionController extends Controller
             "id" => 1,
             "params" => [
                 "output" => ["host", "name"],
-                "groupids" => $groupId,
+                "groupids" => explode(',', $groupId),
                 "selectItems" => ["lastvalue", "name"],
-                "selectInventory" => ["location_lat", "location_lon", "notes", "location", "contact"]
+                "selectInventory" => ["location_lat", "location_lon", "notes", "location", "contact"],
+                "limit" => 0,
+                "offset" => 0
             ]
         ]);
 
