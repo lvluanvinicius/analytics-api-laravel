@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\GponOnus;
 use App\Traits\ApiResponser;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 class GponOnusController extends Controller
@@ -33,18 +34,31 @@ class GponOnusController extends Controller
      */
     public function names(Request $request)
     {
+        // Verificando se o parâmetro equipament foi informado.
+        if (!$request->has('equipament')) {
+            return $this->error("O parâmetro 'equipament' deve ser informado.");
+        }
+
+        // Verificando se o parâmetro port foi informado.
+        if (!$request->has('port')) {
+            return $this->error("O parâmetro 'port' deve ser informado.");
+        }
+
         // Carregar parametros.
         $params = $request->query();
 
+        // Carregando times padrão para não pesar a consulta.
         $time_from = date('Y-m-d H:i', strtotime('-3 day'));;
         $time_till = date('Y-m-d H:i');
+        // Recuperando parametros obrigatórios.
         $equipament = $params['equipament'];
         $port = $params['port'];
-
+        // Realizando consulta e recuperando nomes.
         $onus = GponOnus::where('device', $equipament)
             ->where('port', $port)
             ->where('collection_date', '>=', $time_from)
             ->where('collection_date', '<=', $time_till)
+            ->orderBy('name', 'asc')
             ->distinct(['name'])->pluck('name');
 
         return $this->success($onus);
@@ -56,40 +70,60 @@ class GponOnusController extends Controller
      * @param Request $request
      * @return json
      */
-    public function datasOnus(Request $request)
+    public function onusDatasPerPeriod(Request $request)
     {
-        $onus = new GponOnus();
+        // Verificando se o endereço do zabbix foi informado.
+        if (!$request->has('timeFrom') || !$request->has('timeTo')) {
+            return $this->error("Por favor, os parâmetros 'timeFrom' e 'timeTo' são obrigatórios.");
+        }
+
+        // Verificando se o parâmetro equipament foi informado.
+        if (!$request->has('equipament')) {
+            return $this->error("O parâmetro 'equipament' deve ser informado.");
+        }
+
+        // Verificando se o parâmetro port foi informado.
+        if (!$request->has('port')) {
+            return $this->error("O parâmetro 'port' deve ser informado.");
+        }
 
         $params = $request->query();
 
+        // Recuperando timerange.
+        // $timeFromString = DateTime::createFromFormat('Y-m-d H:i:s', str_replace('_', ':', $params['timeFrom']));
+        // $timeToString = DateTime::createFromFormat('Y-m-d H:i:s', str_replace('_', ':', $params['timeTo']));
+
+        $timeFromString = str_replace('_', ':', $params['timeFrom']);
+        $timeToString = str_replace('_', ':', $params['timeTo']);
+
+        // Convertendo para timestamp.
+        // $timestampFrom = strtotime($timeFromString);
+        // $timestampTo = strtotime($timeToString);
+
+        // .
         $equipament = $params["equipament"];
         $port = $params["port"];
-        // $time_from = $params["time_from"];
-        // $time_till = $params["time_till"];
         $name = $params['name'];
-        $timer = $params['timer'];
 
         // Validar parametros.
 
         // Validar tempo encaminhado.
 
         // Consulta
-        // $onusData = $onus->onusDatasAggregateDays([
-        //     'equipament' => $equipament,
-        //     'port' => $port,
-        //     // 'time_from' => $time_from,
-        //     // 'time_till' => $time_till,
-        //     'name' =>  $name,
-        //     'hour' => 3
-        // ]);
+        $onus = new GponOnus();
+
+        $onusData = $onus->where('device', '=', $equipament)
+            ->where('port', '=', $port)
+            ->where('name', '=', $name)
+            ->where('collection_date', '>=', $timeFromString)
+            ->where('collection_date', '<=', $timeToString)
+            ->get();
 
 
-        // Substituindo valores de letas para palavras completas, utilizadas no strtotime.
-        $valueTime = Str::replace(['d', 'm', 'h', 'y'], ['days', 'minutes', 'hours', 'years'], $timer);
-
-        $actualDate = date('Y-m-d H:i:s'); // Obtém o timestamp da data atual
-        $pastTime = date('Y-m-d H:i:s', strtotime("-$valueTime", $actualDate));
-
-        return $this->success($pastTime);
+        return $this->success($onusData);
     }
 }
+
+// $.data.*.m_rx - RX DBM
+// $.data.*.m_tx - TX DBM
+// $.data.*.collection_date - Data de Coleta

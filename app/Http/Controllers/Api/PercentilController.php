@@ -13,6 +13,13 @@ class PercentilController extends Controller
 
     public function index(Request $request)
     {
+        // From: ${__from:date:YYYY-MM-DD HH_mm_ss} ------------- To: ${__to:date:YYYY-MM-DD HH_mm_ss}
+
+        // Verificando se o endereço do zabbix foi informado.
+        if (!$request->has('timeFrom') || !$request->has('timeTo')) {
+            return $this->error("Por favor, os parâmetros 'timeFrom' e 'timeTo' são obrigatórios.");
+        }
+
         // Verificando se o token foi informado corretamente.
         if (!$request->headers->has('zabbixtoken')) {
             return $this->error("Por favor, informe o token do zabbix no header com a chave 'zabbixtoken'.");
@@ -37,6 +44,13 @@ class PercentilController extends Controller
         // Recuperando valor de itemids.
         $itemids = $request->query('itemids');
 
+        // Recuperando timerange.
+        $timeFromString = str_replace('_', ':', $request->timeFrom);
+        $timeToString = str_replace('_', ':', $request->timeTo);
+        // Convertendo para timestamp.
+        $timestampFrom = strtotime($timeFromString);
+        $timestampTo = strtotime($timeToString);
+
         // Criando conexão com a API.
         $zabbix = new History(
             $urlbase = $baseUrl,
@@ -53,9 +67,10 @@ class PercentilController extends Controller
                 "itemids" => [$itemids],
                 "sortorder" => "DESC",
                 "sortfield" => "clock",
+                "time_from" => $timestampFrom,
+                "time_till" => $timestampTo
             ]
         ]);
-
 
         // return $this->succes
         return $this->success($this->calcPercentil($zabbixData));
@@ -86,7 +101,7 @@ class PercentilController extends Controller
         $value_mb = $sumValues / (8 * 1000000);
 
         // Cálculo de gastos.
-        $real = number_format($value_mb * 2.00, 2, ',', '.');
+        $real = number_format($value_mb * 2.20, 2, ',', '.');
 
         return [
             "consumption" => $sumValues,

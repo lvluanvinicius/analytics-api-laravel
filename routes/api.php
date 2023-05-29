@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\{
     AuthController,
     EquipamentController,
+    GponGetDatesController,
     GponOnusController,
+    GponOnusPerPortsController,
     HostsController,
     InterconnectionController,
     PortsController,
@@ -49,7 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('onus')->as('onus.')->group(function () {
         Route::get('/', [GponOnusController::class, 'index'])->name('index');
         Route::get('/names', [GponOnusController::class, 'names'])->name('names');
-        Route::get('/datas-onus', [GponOnusController::class, 'datasOnus'])->name('datasOnus');
+        Route::get('/get-dates', [GponGetDatesController::class, 'getDates'])->name('get.dates');
+        Route::get('/onus-per-port', [GponOnusPerPortsController::class, 'onusPerPorts'])->name('onus.per.ports');
+        Route::get('/datas-onus', [GponOnusController::class, 'onusDatasPerPeriod'])->name('datasOnus');
     });
 
     Route::prefix('hosts')->as('hosts.')->group(function () {

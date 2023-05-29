@@ -22,7 +22,7 @@ class EquipamentController extends Controller
      */
     public function index()
     {
-        $equipaments = GponEquipaments::get("name");
+        $equipaments = GponEquipaments::orderBy('name', 'asc')->get("name");
 
         return response()->json($equipaments);
     }
