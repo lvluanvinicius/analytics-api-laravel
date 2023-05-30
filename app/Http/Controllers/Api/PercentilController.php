@@ -98,10 +98,12 @@ class PercentilController extends Controller
         $sumValues = array_sum(array_map('intval', $auxItem));
 
         // Somando convertendo em bytes.
-        $value_mb = $sumValues / (8 * 1000000);
+        $value_mb = $sumValues / (8 *  1000000);
 
         // Cálculo de gastos.
         $real = number_format($value_mb * 2.20, 2, ',', '.');
+        // $real = $value_mb * 2.20;
+
 
         return [
             "consumption" => $sumValues,

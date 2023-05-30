@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\{
     GponOnusPerPortsController,
     HostsController,
     InterconnectionController,
+    JiraAtlassianController,
     PortsController,
     ProxmoxController,
     PercentilController,
@@ -81,5 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('interconnection')->as('interconnection.')->group(function () {
             Route::get('/', [InterconnectionController::class, 'index'])->name('index');
         });
+    });
+
+    Route::prefix('jira-atlassian')->as('jiraatlassian.')->group(function () {
+        Route::get('/request-sla', [JiraAtlassianController::class, 'requestSla'])->name('index');
     });
 });

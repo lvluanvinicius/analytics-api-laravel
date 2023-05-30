@@ -29,7 +29,8 @@
             "App\\Collections\\Ftp\\": "app/Collections/Ftp/",
             "App\\Collections\\": "app/Collections/",
             "App\\Zabbix\\": "app/Zabbix/",
-            "App\\Zabbix\\Models\\": "app/Zabbix/Models/"
+            "App\\Zabbix\\Models\\": "app/Zabbix/Models/",
+            "App\\JiraAtlassian\\": "app/JiraAtlassian/"
         },
         "files": [
             "app/helpers/Macros.php",
