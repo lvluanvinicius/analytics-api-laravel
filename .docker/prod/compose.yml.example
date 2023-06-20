@@ -14,15 +14,15 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: analytics
-      POSTGRES_PASSWORD: DitCD34a9
+      POSTGRES_PASSWORD: 
       POSTGRES_DB: analytics
     ports:
-      - 3245:5432
+      - 5432:5432
     networks:
       - monitoring-network
     volumes:
       - analyticsdata:/var/lib/postgresql/data
-      # - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
 
 
 networks:
