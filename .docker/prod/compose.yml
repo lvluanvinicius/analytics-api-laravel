@@ -17,7 +17,7 @@ services:
       POSTGRES_PASSWORD: DitCD34a9
       POSTGRES_DB: analytics
     ports:
-      - 5432:5432
+      - 3245:5432
     networks:
       - monitoring-network
     volumes:
