@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  analytics:
+    image: analytics:latest
+    volumes:
+      - analyticsv:/var/www/html/storage
+    networks:
+      - monitoring-network
+    ports:
+      - 8081:80
+  
+  analytics_database:
+    image: postgres
+    environment:
+      POSTGRES_USER: analytics
+      POSTGRES_PASSWORD: DitCD34a9
+      POSTGRES_DB: analytics
+    ports:
+      - 5432:5432
+    networks:
+      - monitoring-network
+    volumes:
+      - analyticsdata:/var/lib/postgresql/data
+      # - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+
+
+networks:
+  monitoring-network:
+        external: true
+
+
+volumes:
+  analyticsv:
+    external: true
+
+  analyticsdata:
+    external: true
