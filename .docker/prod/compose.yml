@@ -10,19 +10,19 @@ services:
     ports:
       - 8081:80
   
-  analytics_database:
-    image: postgres
-    environment:
-      POSTGRES_USER: analytics
-      POSTGRES_PASSWORD: DitCD34a9
-      POSTGRES_DB: analytics
-    ports:
-      - 3245:5432
-    networks:
-      - monitoring-network
-    volumes:
-      - analyticsdata:/var/lib/postgresql/data
-      # - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+  # analytics_database:
+  #   image: postgres
+  #   environment:
+  #     POSTGRES_USER: analytics
+  #     POSTGRES_PASSWORD: DitCD34a9
+  #     POSTGRES_DB: analytics
+  #   ports:
+  #     - 3245:5432
+  #   networks:
+  #     - monitoring-network
+  #   volumes:
+  #     - analyticsdata:/var/lib/postgresql/data
+  #     # - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
 
 
 networks:
@@ -36,3 +36,4 @@ volumes:
 
   analyticsdata:
     external: true
+  

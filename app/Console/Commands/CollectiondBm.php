@@ -34,6 +34,7 @@ class CollectiondBm extends Command
         // Carregando Nome do ultimo arquivo de coleta no FTP.
         $collectionftp->getFileName();
 
+
         // Realizando Download do arquivo.
         if ($collectionftp->getFile()) {
             // Salvando dados.

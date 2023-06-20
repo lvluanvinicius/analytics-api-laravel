@@ -1,7 +1,6 @@
 # Define a imagem base para o PHP
 FROM php:8.2-apache
 
-
 # Copie o arquivo de configuração do sources.list para o container
 RUN apt update && apt install -y cron iputils-ping
 
@@ -36,12 +35,6 @@ RUN php artisan storage:link
 # Gera a chave do Laravel
 RUN php artisan key:generate
 
-# Adiciona o comando ao crontab
-RUN echo "* * * * * cd /var/www/html && php artisan schedule:run >> /dev/null 2>&1" >> /etc/crontab
-
-# Executa o comando para atualizar o crontab
-RUN crontab /etc/crontab
-
 # Instala as dependências do npm
 RUN npm install
 
@@ -59,8 +52,18 @@ COPY .docker/prod/apache-config.conf /etc/apache2/sites-available/000-default.co
 # Ativa o módulo de reescrita do Apache
 RUN a2enmod rewrite
 
+# Adiciona o comando cron no arquivo de crontab
+RUN echo "* * * * * root cd /var/www/html && /usr/local/bin/php artisan schedule:run >> /var/log/cron.log 2>&1" > /etc/cron.d/analytics
+
+# Dá permissão de execução ao arquivo de crontab
+RUN chmod 0644 /etc/cron.d/analytics
+
+# Habilita o cron service
+RUN crontab /etc/cron.d/analytics
+
 # Define a porta que o container deve expor
 EXPOSE 80
 
 # Inicializa o Apache quando o container for iniciado
-CMD ["apache2-foreground"]
+# CMD ["apache2-foreground"]
+CMD service cron start && apache2-foreground
