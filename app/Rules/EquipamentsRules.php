@@ -31,7 +31,7 @@ class EquipamentsRules
      */
     protected function ifExistEquipament($name)
     {
-        $equipamet = GponEquipaments::where('NAME', $name)->first('id');
+        $equipamet = GponEquipaments::where('name', $name)->first('id');
 
         if ($equipamet) {
             return true;
