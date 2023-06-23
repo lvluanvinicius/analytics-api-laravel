@@ -85,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('jira-atlassian')->as('jiraatlassian.')->group(function () {
-        Route::get('/request-sla', [JiraAtlassianController::class, 'requestSla'])->name('index');
+        Route::get('/request-sla', [JiraAtlassianController::class, 'requestSla'])->name('requestsla');
+        Route::get('/request-severity',  [JiraAtlassianController::class, 'requestSla'])->name('requestseverity');
     });
 });

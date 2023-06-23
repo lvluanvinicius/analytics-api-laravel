@@ -53,10 +53,17 @@ class Requests
         return $client;
     }
 
+    /**
+     * ... 
+     *
+     * @return void
+     */
     public function reqSla()
     {
+        // Lendo arquivos das cidades existentes no projeto. 
         $locations_data = json_decode(file_get_contents(__DIR__ . '/files/locations.json'), true);
 
+        // Criando conexão com a API e requisitando os dados. 
         $response = $this->connect()->get('servicedesk/3/queue/13/issue', [
             'headers' => [
                 'Accept' => 'application/json',
@@ -89,5 +96,44 @@ class Requests
         }
 
         return $listCidade;
+    }
+
+    public function reqSeverity()
+    {
+        // Lendo arquivos das cidades existentes no projeto. 
+        $locations_data = json_decode(file_get_contents(__DIR__ . '/files/locations.json'), true);
+
+        // Criando conexão com a API e requisitando os dados. 
+        $response = $this->connect()->get('servicedesk/3/queue/13/issue', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Basic ' . base64_encode("$this->email:$this->apiToken"),
+            ],
+        ]);
+
+        // Convertendo dados.
+        $data = json_decode($response->getBody(), true);
+
+        $city_priority = array();
+
+        foreach ($data['values'] as $location) {
+            $issueType = $location['fields']['issuetype']['name'];
+            $priority = $location['fields']['priority']['name'];
+            $labels = $location['fields']['labels'];
+    
+            foreach ($labels as $cidade) {
+                if (!array_key_exists($cidade, $city_priority)) {
+                    $city_priority[$cidade] = array();
+                }
+    
+                if (!array_key_exists($priority, $city_priority[$cidade])) {
+                    $city_priority[$cidade][$priority] = 1;
+                } else {
+                    $city_priority[$cidade][$priority] += 1;
+                }
+            }
+        }
+    
+        echo json_encode(array('cidades' => $city_priority));
     }
 }
