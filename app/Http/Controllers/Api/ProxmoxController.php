@@ -117,6 +117,6 @@ class ProxmoxController extends Controller
         // Realizar request.
         $requestResponse = $this->requestService($proxmoxBasePath, $ticket, $request->headers->get('pvetoken'), $queries['proxmox_path']);
 
-        return $this->success($requestResponse['data'], null);
+        return $this->success($requestResponse, null);
     }
 }
