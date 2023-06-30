@@ -111,7 +111,7 @@ class ProxmoxController extends Controller
 
         // Verificando se houve sucesso no login com o proxmox api.
         if (!$ticket) {
-            return $this->error("Houve um erro ao tentar realizar login. Usuário ou senha estão incorretos.", 401);
+            return $this->error("Houve um erro ao tentar realizar login. Usuário ou senha estão incorretos.", 200);
         }
 
         // Realizar request.
