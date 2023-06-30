@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Hosts;
 use App\Traits\ApiResponser;
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request as Psr7Request;
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TooManyRedirectsException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleRetry\GuzzleRetryMiddleware;
 
 class ProxmoxController extends Controller
 {
@@ -58,23 +61,50 @@ class ProxmoxController extends Controller
 
     public function requestService(string $base_url, string $ticket, string $authorization, $path)
     {
-        $client = new Client([
-            'base_uri' => $base_url,
-            'verify' => false,
-        ]);
+        try {
+            $client = new Client([
+                'base_uri' => $base_url,
+                'verify' => false,
+            ]);
+    
+            // Fazendo a requisição de login
+            $response = $client->get('/api2/json' . $path, [
+                'headers' => [
+                    'Authorization' => $authorization,
+                    'Cookie' => "PVEAuthCookie=" . $ticket,
+                ],
+            ]);
+    
+            // Obtendo o token de autenticação
+            $data = json_decode($response->getBody(), true);
+    
+            return $data;
 
-        // Fazendo a requisição de login
-        $response = $client->get('/api2/json' . $path, [
-            'headers' => [
-                'Authorization' => $authorization,
-                'Cookie' => "PVEAuthCookie=" . $ticket,
-            ],
-        ]);
-
-        // Obtendo o token de autenticação
-        $data = json_decode($response->getBody(), true);
-
-        return $data;
+        } catch (RequestException $error) {
+            if ($error->getResponse()->getStatusCode() === 429) {
+                $client = new Client([
+                    'base_uri' => $base_url,
+                    'verify' => false,
+                ]);
+        
+                // Fazendo a requisição de login
+                $response = $client->get('/api2/json' . $path, [
+                    'headers' => [
+                        'Authorization' => $authorization,
+                        'Cookie' => "PVEAuthCookie=" . $ticket,
+                    ],
+                ]);
+        
+                // Obtendo o token de autenticação
+                $data = json_decode($response->getBody(), true);
+        
+                return $data;
+            } else {
+                return [
+                    "data" => $error->getMessage(),
+                ];
+            }
+        }
     }
 
     public function requestApp(Request $request)
