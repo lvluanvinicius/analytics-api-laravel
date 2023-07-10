@@ -54,7 +54,10 @@ class ProxmoxController extends Controller
             $token = $data['data']['ticket'];
 
             return $token;
+
+            
         } catch (Exception $error) {
+            dd($error);
             return false;
         }
     }
