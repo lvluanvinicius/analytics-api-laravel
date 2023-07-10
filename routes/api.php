@@ -38,7 +38,7 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 
 
-Route::middleware('throttle:700,1')->group(function () {
+Route::middleware('throttle:1200,1')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('equipaments')->as('equipaments.')->group(function () {
