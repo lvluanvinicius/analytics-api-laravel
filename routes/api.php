@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\{
     PercentilController,
     PopsController,
 };
-
+use App\Http\Controllers\Api\PmOurinhosController;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
@@ -83,7 +83,12 @@ Route::middleware('throttle:1200,1')->group(function () {
             Route::prefix('interconnection')->as('interconnection.')->group(function () {
                 Route::get('/', [InterconnectionController::class, 'index'])->name('index');
             });
+
+            Route::prefix('pm-ourinhos')->as('pm-ourinhos.')->group(function () {
+                Route::get('/locales', [PmOurinhosController::class, 'index'])->name('locales');
+            });
         });
+
 
         Route::prefix('jira-atlassian')->as('jiraatlassian.')->group(function () {
             Route::get('/request-sla', [JiraAtlassianController::class, 'requestSla'])->name('requestsla');

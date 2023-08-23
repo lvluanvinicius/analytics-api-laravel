@@ -11,7 +11,8 @@
         "editor.defaultFormatter": "onecentlin.laravel-blade",
         "editor.formatOnSave": true,
     },
-    "editor.fontSize": 16,
+    "editor.fontSize": 20,
+    "terminal.integrated.fontSize": 18,
     "laravelDocs.version": "10.x",
     "LaravelExtraIntellisense.modelsPaths": ["app", "app/Models"],
     "laravel_goto_view.extensions": [

@@ -9,6 +9,12 @@ class Hosts extends Zabbix
 {
     public string $version = "2.0";
 
+    /**
+     * Recupera dados de uma requisição para metodo host.get;
+     *
+     * @param array $params
+     * @return void
+     */
     public function request(array $params)
     {
         // Setando versão do jsonrpc.
@@ -21,8 +27,7 @@ class Hosts extends Zabbix
         } else {
             $params["auth"] = $this->__get("token");
         }
-
-        // Realiza o request.
+                // Realiza o request.
         $response = $this->connection()->post('', [
             'headers' => [
                 'Content-Type' => 'application/json',
