@@ -48,16 +48,6 @@ class PmOurinhosController extends Controller
                 ],
             ]);
 
-            function arrayFilter(array $locales, array $zbxData)
-            {
-                foreach ($locales as $lc) {
-                    dd($zbxData['triggers']);
-                    if (trim($zbxData['tags'][1]['value']) == trim($lc->name)) {
-                        return $zbxData;
-                    }
-                }
-            }
-
             // Novo array para retorno com os dados separados.
             $newZabbixData = [];
             foreach ($zabbixData['result'] as $zbxData) {
