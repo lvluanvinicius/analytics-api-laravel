@@ -71,7 +71,7 @@ class PmOurinhosController extends Controller
                             "name" => $lc->name,
                             "itemid" => $zbxData['itemid'],
                             "triggers" => $zbxData['triggers'],
-                            "lastvalue" =>  $status,
+                            "status" =>  $status,
                             "locale" => [
                                 $lc->lat,
                                 $lc->lon,
