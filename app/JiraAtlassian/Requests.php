@@ -64,7 +64,7 @@ class Requests
         $locations_data = json_decode(file_get_contents(__DIR__ . '/files/locations.json'), true);
 
         // Criando conexão com a API e requisitando os dados. 
-        $response = $this->connect()->get('servicedesk/3/queue/13/issue', [
+        $response = $this->connect()->get('servicedesk/3/queue/14/issue', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . base64_encode("$this->email:$this->apiToken"),
@@ -104,7 +104,7 @@ class Requests
         $locations_data = json_decode(file_get_contents(__DIR__ . '/files/locations.json'), true);
 
         // Criando conexão com a API e requisitando os dados. 
-        $response = $this->connect()->get('servicedesk/3/queue/13/issue', [
+        $response = $this->connect()->get('servicedesk/3/queue/14/issue', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Basic ' . base64_encode("$this->email:$this->apiToken"),
