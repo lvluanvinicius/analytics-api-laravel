@@ -90,8 +90,8 @@ class GponOnusController extends Controller
 
         $params = $request->query();
 
-        $timeFromString = str_replace('_', ':', $params['timeFrom']);
-        $timeToString = str_replace('_', ':', $params['timeTo']);
+        $timeFromString = str_replace('%', ' ', str_replace('_', ':', $params['timeFrom']));
+        $timeToString = str_replace('%', ' ', str_replace('_', ':', $params['timeTo']));
 
         // Convertendo para timestamp.
         $timestampFrom = DateTime::createFromFormat('d/m/Y H:i:s', $timeFromString)->format('Y-m-d H:i:s');
@@ -100,7 +100,7 @@ class GponOnusController extends Controller
         $equipament = $params["equipament"];
         $port = $params["port"];
         $name = $params['name'];
-        
+
         // Consulta
         $onus = new GponOnus();
 
