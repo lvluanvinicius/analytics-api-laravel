@@ -7,6 +7,7 @@ use App\Models\GponOnus;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use DateTime;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -89,34 +90,25 @@ class GponOnusController extends Controller
 
         $params = $request->query();
 
-        // Recuperando timerange.
-        // $timeFromString = DateTime::createFromFormat('Y-m-d H:i:s', str_replace('_', ':', $params['timeFrom']));
-        // $timeToString = DateTime::createFromFormat('Y-m-d H:i:s', str_replace('_', ':', $params['timeTo']));
-
         $timeFromString = str_replace('_', ':', $params['timeFrom']);
         $timeToString = str_replace('_', ':', $params['timeTo']);
 
         // Convertendo para timestamp.
-        // $timestampFrom = strtotime($timeFromString);
-        // $timestampTo = strtotime($timeToString);
+        $timestampFrom = DateTime::createFromFormat('d/m/Y H:i:s', $timeFromString)->format('Y-m-d H:i:s');
+        $timestampTo = DateTime::createFromFormat('d/m/Y H:i:s', $timeToString)->format('Y-m-d H:i:s');
 
-        // .
         $equipament = $params["equipament"];
         $port = $params["port"];
         $name = $params['name'];
-
-        // Validar parametros.
-
-        // Validar tempo encaminhado.
-
+        
         // Consulta
         $onus = new GponOnus();
 
         $onusData = $onus->where('device', '=', $equipament)
             ->where('port', '=', $port)
             ->where('name', '=', $name)
-            ->where('collection_date', '>=', $timeFromString)
-            ->where('collection_date', '<=', $timeToString)
+            ->where('collection_date', '>=', $timestampFrom)
+            ->where('collection_date', '<=', $timestampTo)
             ->get();
 
 
