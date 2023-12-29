@@ -94,8 +94,12 @@ class GponOnusController extends Controller
         $timeToString = str_replace('%', ' ', str_replace('_', ':', $params['timeTo']));
 
         // Convertendo para timestamp.
-        $timestampFrom = DateTime::createFromFormat('d/m/Y H:i:s', $timeFromString)->format('Y-m-d H:i:s');
-        $timestampTo = DateTime::createFromFormat('d/m/Y H:i:s', $timeToString)->format('Y-m-d H:i:s');
+        $timestampFrom = DateTime::createFromFormat('Y-m-d H:i:s', $timeFromString);
+        $timestampTo = DateTime::createFromFormat('Y-m-d H:i:s', $timeToString);
+
+        if (!$timestampFrom || !$timestampTo) {
+            return $this->error("Data deve ser informada no formato 'Y-m-d H:i:s'");
+        }
 
         $equipament = $params["equipament"];
         $port = $params["port"];
@@ -107,15 +111,11 @@ class GponOnusController extends Controller
         $onusData = $onus->where('device', '=', $equipament)
             ->where('port', '=', $port)
             ->where('name', '=', $name)
-            ->where('collection_date', '>=', $timestampFrom)
-            ->where('collection_date', '<=', $timestampTo)
+            ->where('collection_date', '>=', $timestampFrom->format('Y-m-d H:i:s'))
+            ->where('collection_date', '<=', $timestampTo->format('Y-m-d H:i:s'))
             ->get();
 
 
         return $this->success($onusData);
     }
 }
-
-// $.data.*.m_rx - RX DBM
-// $.data.*.m_tx - TX DBM
-// $.data.*.collection_date - Data de Coleta
