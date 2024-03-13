@@ -16,32 +16,36 @@ class EquipamentController extends Controller
     use ApiResponser;
 
     /**
-     * Retorna todos os equipamentos.
+     * Recupera todos os equipamentos. 
+     * 
+     * @author Luan Santos <lvluansantos@gmail.com>
      *
-     * @return string
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        $equipaments = GponEquipaments::orderBy('name', 'asc')->get("name");
+        try {
+            // Recuperando equipamentos.
+            $equipaments = GponEquipaments::orderBy('name', 'asc')->get("name");
 
-        return response()->json($equipaments);
+            return $this->success($equipaments, 'Equipamentos recuperados com sucesso.');
+        } catch (\Exception $error) {
+            return $this->error($error->getMessage(), \Illuminate\Http\Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(EquipamentsRequest $request)
+    public function store(EquipamentsRequest $request): \Illuminate\Http\JsonResponse
     {
-
-        $equipamentValidate = new EquipamentsRules();
-
-        // Validando dados.
-        $errorValidate = $equipamentValidate->validate($request->name);
-        if (!$errorValidate['status']) {
-            return $this->error($errorValidate['message']);
-        }
-
         try {
+            $equipamentValidate = new EquipamentsRules();
+
+            // Validando dados.
+            $errorValidate = $equipamentValidate->validate($request->name);
+            if (!$errorValidate['status']) throw new \Exception($errorValidate['message']);
+
             // Criando equipamentos.
             $gponEquipament = new GponEquipaments();
 
@@ -70,10 +74,7 @@ class EquipamentController extends Controller
                 return $this->success('Equipamento criado com sucesso.');
             }
         } catch (Exception | ModelNotFoundException $error) {
-            return $this->error($error->getMessage());
+            return $this->error($error->getMessage(), \Illuminate\Http\Response::HTTP_BAD_REQUEST);
         }
-
-
-        return $this->error("Não foi possível criar o equipamento.");
     }
 }
