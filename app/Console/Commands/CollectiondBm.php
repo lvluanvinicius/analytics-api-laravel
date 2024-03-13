@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Collections\CollectionFTP;
+use App\Exceptions\CollectionFTPException;
 use App\Models\GponOnus;
 use Error;
 use Exception;
@@ -29,30 +30,34 @@ class CollectiondBm extends Command
      */
     public function handle()
     {
-        $collectionftp = new CollectionFTP();
+        try {
+            $collectionftp = new CollectionFTP();
 
-        // Carregando Nome do ultimo arquivo de coleta no FTP.
-        $collectionftp->getFileName();
+            // Carregando Nome do ultimo arquivo de coleta no FTP.
+            $collectionftp->getFileName();
 
 
-        // Realizando Download do arquivo.
-        if ($collectionftp->getFile()) {
-            // Salvando dados.
-            try {
-                // Lendo e carregando dados do content do arquivo.
-                $collects = $collectionftp->getFileContent();
+            // Realizando Download do arquivo.
+            if ($collectionftp->getFile()) {
+                // Salvando dados.
+                try {
+                    // Lendo e carregando dados do content do arquivo.
+                    $collects = $collectionftp->getFileContent();
 
-                $chunkSize = 1000;
+                    $chunkSize = 1000;
 
-                // Salvando dados a cada bloco de mil.
-                foreach (array_chunk($collects, $chunkSize) as $chunk) {
-                    GponOnus::insert($chunk);
+                    // Salvando dados a cada bloco de mil.
+                    foreach (array_chunk($collects, $chunkSize) as $chunk) {
+                        GponOnus::insert($chunk);
+                    }
+
+                    echo (date('Y-m-d H:i:s') . " | Dados salvos com sucesso." . PHP_EOL);
+                } catch (Error | Exception $error) {
+                    echo (date('Y-m-d H:i:s') . " | " . $error->getMessage() . PHP_EOL);
                 }
-
-                echo (date('Y-m-d H:i:s') . " | Dados salvos com sucesso." . PHP_EOL);
-            } catch (Error | Exception $error) {
-                echo (date('Y-m-d H:i:s') . " | " . $error->getMessage() . PHP_EOL);
             }
+        } catch (Error | Exception | CollectionFTPException $error) {
+            echo (date('Y-m-d H:i:s') . " | " . $error->getMessage() . PHP_EOL);
         }
     }
 }

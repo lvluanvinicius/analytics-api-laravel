@@ -22,6 +22,12 @@ class LoginController extends Controller
         ]);
     }
 
+    /**
+     * @author Luan Santos <lvluansantos@gmail.com>
+     *
+     * @param LoginRequest $request
+     * @return void
+     */
     public function auth(LoginRequest $request)
     {
         // Verificando se os dados foram preenchidos corretamente. $this->getMessage("apperror", "ErrorEmailNotInformed")
@@ -48,6 +54,6 @@ class LoginController extends Controller
         }
 
         // Retorna home se os dados baterem com os do db.
-        return redirect()->route("app.home");
+        return redirect()->route("");
     }
 }

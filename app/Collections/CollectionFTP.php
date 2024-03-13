@@ -3,6 +3,7 @@
 namespace App\Collections;
 
 use App\Collections\Ftp\Connection;
+use App\Exceptions\CollectionFTPException;
 use Error;
 use Exception;
 use Illuminate\Support\Facades\Date;
@@ -52,6 +53,9 @@ class CollectionFTP
 
         // Buscando ultimo arquivo da lista.
         $name = end($contents);
+
+        // Valida se houve retorno na listagem de arquivos no FTP.
+        !$name && throw new CollectionFTPException('Nenhum arquivo encontrado para coleta.');
 
         // Retornando valor apenas do arquivo.
         $this->fname = "ONU " . explode(' ', $name)[1];
