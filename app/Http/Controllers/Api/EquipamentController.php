@@ -8,7 +8,6 @@ use App\Models\GponEquipaments;
 use App\Models\GponPorts;
 use App\Rules\EquipamentsRules;
 use App\Traits\ApiResponser;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EquipamentController extends Controller
@@ -35,7 +34,12 @@ class EquipamentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Insere um novo equipamento. 
+     * 
+     * @author Luan Santos <lvluansantos@gmail.com>
+     *
+     * @param EquipamentsRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(EquipamentsRequest $request): \Illuminate\Http\JsonResponse
     {
@@ -73,7 +77,7 @@ class EquipamentController extends Controller
 
                 return $this->success('Equipamento criado com sucesso.');
             }
-        } catch (Exception | ModelNotFoundException $error) {
+        } catch (\Exception | ModelNotFoundException $error) {
             return $this->error($error->getMessage(), \Illuminate\Http\Response::HTTP_BAD_REQUEST);
         }
     }
