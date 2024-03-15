@@ -56,11 +56,11 @@ class EquipamentController extends Controller
             $gponEquipament->name = $request->name;
             $gponEquipament->n_port = $request->number_ports;
 
-            // // Salvando e validando se ouve registro.
-            if ($gponEquipament->save()) {
+            // Gerando strings de identificação de portas no padrão Datacom.
+            $equipament = [];
 
-                // Gerando strings de identificação de portas no padrão Datacom.
-                $equipament = [];
+            // Salvando e validando se ouve registro.
+            if ($gponEquipament->save()) {
                 for ($p = 1; $p < $request->number_ports + 1; $p++) {
                     // salvando no auxiliar os dados gerados a partir da quantidade de portas informada no request..
                     array_push($equipament, ["port" => "gpon 1/1/$p", "equipament_id" => $gponEquipament->id]);
@@ -75,7 +75,10 @@ class EquipamentController extends Controller
                     return $this->error("Erro ao tentar criar as portas para o equipameto $request->name.");
                 }
 
-                return $this->success('Equipamento criado com sucesso.');
+                return $this->success([
+                    'equipament' => $gponEquipament,
+                    'gports' => $equipament,
+                ], 'Equipamento criado com sucesso.');
             }
         } catch (\Exception | ModelNotFoundException $error) {
             return $this->error($error->getMessage(), \Illuminate\Http\Response::HTTP_BAD_REQUEST);
