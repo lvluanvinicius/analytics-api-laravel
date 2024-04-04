@@ -11,6 +11,12 @@ class GponGetDatesController extends Controller
 {
     use ApiResponser;
 
+    /**
+     * Recupera as datas de coleta.
+     *
+     * @param Request $request
+     * @return void
+     */
     public function getDates(Request $request)
     {
         // Verificando se o endereço do zabbix foi informado.
@@ -33,6 +39,39 @@ class GponGetDatesController extends Controller
         // Recuperando timerange
         $timeFromString = str_replace('_', ':', $params['timeFrom']);
         $timeToString = str_replace('_', ':', $params['timeTo']);
+
+        $equipament = $params["equipament"];
+        $port = $params["port"];
+
+        $onus = new GponOnus();
+
+        $onusData = $onus->where('device', '=', $equipament)
+            ->where('port', '=', $port)
+            ->where('collection_date', '>=', $timeFromString)
+            ->where('collection_date', '<=', $timeToString)
+            ->orderBy('collection_date', 'desc')
+            ->select('collection_date')
+            ->distinct('collection_date')
+            ->get();
+
+        return $this->success($onusData);
+    }
+
+    public function zbxGetDates(Request $request)
+    {
+        // Verificando se o parâmetro equipament foi informado.
+        if (!$request->has('equipament')) {
+            return $this->error("O parâmetro 'equipament' deve ser informado.");
+        }
+
+        // Verificando se o parâmetro port foi informado.
+        if (!$request->has('port')) {
+            return $this->error("O parâmetro 'port' deve ser informado.");
+        }
+
+        $params = $request->query();
+        $timeFromString = (new \DateTime())->modify('-1 hour')->format('Y-m-d H:i:s'); // (new \DateTime())->format('Y-m-d H:i:s');
+        $timeToString = (new \DateTime())->format('Y-m-d H:i:s');
 
         $equipament = $params["equipament"];
         $port = $params["port"];
