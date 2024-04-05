@@ -46,4 +46,35 @@ class GponOnusPerPortsController extends Controller
 
         return $this->success($onusData);
     }
+
+
+    public function onusPerPortsBeforeDate(Request $request)
+    {
+        // Verificando se o parâmetro equipament foi informado.
+        if (!$request->has('equipament')) {
+            return $this->error("O parâmetro 'equipament' deve ser informado.");
+        }
+
+        // Verificando se o parâmetro port foi informado.
+        if (!$request->has('port')) {
+            return $this->error("O parâmetro 'port' deve ser informado.");
+        }
+
+        $params = $request->query();
+
+        // Recuperando timerange
+        $equipament = $params["equipament"];
+        $port = $params["port"];
+        $collection_date = (new \DateTime())->modify('-1 hour')->format('Y-m-d H:i:s');
+
+        $onus = new GponOnus();
+
+        $onusData = $onus->where('device', '=', $equipament)
+            ->where('port', '=', $port)
+            ->where('collection_date', '=', $collection_date)
+            ->orderBy('name', 'asc')
+            ->get(['onuid', 'serial_number', 'name', 'tx', 'rx', 'device', 'port']);
+
+        return $this->success($onusData);
+    }
 }

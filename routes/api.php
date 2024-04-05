@@ -56,6 +56,7 @@ Route::middleware('throttle:1200,1')->group(function () {
             Route::get('/get-dates', [GponGetDatesController::class, 'getDates'])->name('get.dates');
             Route::get('/zbx-get-dates', [GponGetDatesController::class, 'zbxGetDates'])->name('zbx.get.dates');
             Route::get('/onus-per-port', [GponOnusPerPortsController::class, 'onusPerPorts'])->name('onus.per.ports');
+            Route::get('/onus-per-port/before-date', [GponOnusPerPortsController::class, 'onusPerPortsBeforeDate'])->name('onus.per.ports');
             Route::get('/datas-onus', [GponOnusController::class, 'onusDatasPerPeriod'])->name('datasOnus');
         });
 
