@@ -2,22 +2,38 @@ version: '3.8'
 
 services:
   analytics:
-    image: analytics:latest
+    image: docker-registry.grupocednet.com.br/analytics-api:1.0.0
     volumes:
-      - analyticsv:/var/www/html/storage
+      - analyticsv:/var/www
     networks:
       - monitoring-network
     ports:
-      - 8081:80
-  
+      - 9000:80
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: analytics_database
+      DB_PORT: 5432
+      DB_DATABASE: analytics
+      DB_USERNAME: analytics
+      DB_PASSWORD: '@DitCD34a9'
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
   analytics_database:
-    image: postgres
+    image: postgres:latest
     environment:
       POSTGRES_USER: analytics
-      POSTGRES_PASSWORD: DitCD34a9
+      POSTGRES_PASSWORD: '@DitCD34a9'
       POSTGRES_DB: analytics
-    ports:
-      - 3245:5432
+
     networks:
       - monitoring-network
     volumes:
@@ -27,13 +43,21 @@ services:
 
 networks:
   monitoring-network:
-        external: true
-
+    driver: overlay
 
 volumes:
   analyticsv:
-    external: true
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      # device: /home/luan/analytics-api-laravel/temp/www
+      device: /docker/analytics/app/www
 
   analyticsdata:
-    external: true
-  
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      # device: /home/luan/analytics-api-laravel/temp/data
+      device: /docker/analytics/app/data

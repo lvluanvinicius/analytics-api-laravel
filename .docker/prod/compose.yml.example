@@ -2,38 +2,57 @@ version: '3.8'
 
 services:
   analytics:
-    image: analytics:latest
+    # image: analytics-api:latest
+    image: analytics-api:1.0.0
     volumes:
-      - analyticsv:/var/www/html/storage
+      - analyticsv:/var/www
     networks:
       - monitoring-network
     ports:
-      - 8081:80
-  
+      - 9000:80
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
   analytics_database:
-    image: postgres
+    image: postgres:latest
     environment:
       POSTGRES_USER: analytics
-      POSTGRES_PASSWORD: 
+      POSTGRES_PASSWORD: analytics
       POSTGRES_DB: analytics
     ports:
-      - 5432:5432
+      - 3245:5432
     networks:
       - monitoring-network
     volumes:
       - analyticsdata:/var/lib/postgresql/data
-      - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+      # - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
 
 
 networks:
   monitoring-network:
-        external: true
-
+    driver: overlay
 
 volumes:
   analyticsv:
-    external: true
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /docker/analytics/app/www
 
   analyticsdata:
-    external: true
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /docker/analytics/app/data
+
   

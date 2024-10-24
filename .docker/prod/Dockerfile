@@ -66,4 +66,5 @@ EXPOSE 80
 
 # Inicializa o Apache quando o container for iniciado
 # CMD ["apache2-foreground"]
-CMD service cron start && apache2-foreground
+# CMD service cron start && apache2-foreground
+CMD ["sh", "-c", "service cron start && apache2-foreground"]

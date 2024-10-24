@@ -3,13 +3,13 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "terminal.integrated.fontFamily": "monospace",
     "editor.fontFamily": "Fira Code",
-    "editor.fontSize": 18,
+    "editor.fontSize": 14,
     "editor.lineHeight": 24,
     "editor.fontLigatures": true,
     "editor.rulers": [100, 120],
     "editor.renderLineHighlight": "gutter",
     "explorer.compactFolders": false,
-    "workbench.iconTheme": "material-icon-theme",
+    "workbench.iconTheme": "vscode-icons",
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true
